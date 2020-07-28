@@ -1,8 +1,8 @@
-import React, { Suspense, lazy } from "react"
-import { Router, Switch, Route } from "react-router-dom"
-import { history } from "./history"
+import React, { lazy, Suspense } from "react"
 import { connect } from "react-redux"
+import { Route, Router, Switch, Redirect } from "react-router-dom"
 import Spinner from "./components/@vuexy/spinner/Loading-spinner"
+import { history } from "./history"
 import { ContextLayout } from "./utility/context/Layout"
 
 // Route-based code splitting
@@ -10,36 +10,25 @@ const Home = lazy(() =>
   import("./views/pages/Home")
 )
 
-const Page2 = lazy(() =>
-  import("./views/pages/Page2")
+const Member = lazy(() =>
+  import("./views/pages/Member")
 )
 
 const login = lazy(() =>
-  import("./views/pages/authentication/login/Login")
+  import("./views/pages/Login")
 )
 
 // Set Layout and Component Using App Route
-const RouteConfig = ({
-  component: Component,
-  fullLayout,
-  permission,
-  user,
-  ...rest
-}) => (
+const RouteConfig = ({ component: Component, fullLayout, permission, user, ...rest }) => (
   <Route
     {...rest}
     render={props => {
       return (
         <ContextLayout.Consumer>
           {context => {
-            let LayoutTag =
-              fullLayout === true
-                ? context.fullLayout
-                : context.state.activeLayout === "horizontal"
-                ? context.horizontalLayout
-                : context.VerticalLayout
+            let LayoutTag = fullLayout === true ? context.fullLayout : context.state.activeLayout === "horizontal" ? context.horizontalLayout : context.VerticalLayout
               return (
-                <LayoutTag {...props} permission={props.user}>
+                <LayoutTag {...props} permission={props.auth?.role || '-'}>
                   <Suspense fallback={<Spinner />}>
                     <Component {...props} />
                   </Suspense>
@@ -53,36 +42,36 @@ const RouteConfig = ({
 )
 const mapStateToProps = state => {
   return {
-    user: state.auth.login.userRole
+    auth: state.auth
   }
 }
 
-const AppRoute = connect(mapStateToProps)(RouteConfig)
+const AppRoute = connect(mapStateToProps)(RouteConfig);
 
 class AppRouter extends React.Component {
   render() {
-    return (
-      // Set the directory path if you are deploying in sub-folder
-      <Router history={history}>
+    const isAuthenticated = this.props.auth.token;
+
+    let routes;
+    if (isAuthenticated) {
+      routes = (<Router history={history}>
         <Switch>
-          <AppRoute
-            exact
-            path="/"
-            component={Home}
-          />
-          <AppRoute
-            path="/page2"
-            component={Page2}
-          />
-          <AppRoute
-            path="/pages/login"
-            component={login}
-            fullLayout
-          />
+          <AppRoute exact path="/" component={Home} />
+          <AppRoute path="/members" component={Member} />
+          <Redirect to="/" />
         </Switch>
-      </Router>
-    )
+      </Router>)
+    } else {
+      routes = (<Router history={history}>
+        <Switch>
+          <AppRoute path="/login" component={login} fullLayout />
+          <Redirect to="/login" />
+        </Switch>
+      </Router>)
+    }
+
+    return routes;
   }
 }
 
-export default AppRouter
+export default connect(mapStateToProps)(AppRouter);

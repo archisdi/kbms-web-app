@@ -1,21 +1,13 @@
-import React from "react"
-import {
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownItem,
-  DropdownToggle,
-  Media,
-  Badge
-} from "reactstrap"
-import PerfectScrollbar from "react-perfect-scrollbar"
 import axios from "axios"
-import * as Icon from "react-feather"
 import classnames from "classnames"
+import React from "react"
+import * as Icon from "react-feather"
+import PerfectScrollbar from "react-perfect-scrollbar"
+import { connect } from "react-redux"
+import { Badge, DropdownItem, DropdownMenu, DropdownToggle, Media, NavItem, NavLink, UncontrolledDropdown } from "reactstrap"
 import Autocomplete from "../../../components/@vuexy/autoComplete/AutoCompleteComponent"
 import { history } from "../../../history"
-
+import { LogoutAction } from '../../../redux/actions/auth'
 
 const UserDropdown = props => {
   return (
@@ -44,7 +36,7 @@ const UserDropdown = props => {
       <DropdownItem
         tag="a"
         href="#"
-        onClick={e => history.push("/pages/login")}
+        onClick={() => props.logout()}
       >
         <Icon.Power size={14} className="mr-50" />
         <span className="align-middle">Log Out</span>
@@ -57,6 +49,11 @@ class NavbarUser extends React.PureComponent {
   state = {
     navbarSearch: false,
     suggestions: []
+  }
+
+  logout() {
+    this.props.LogoutAction();
+    history.push("/login")
   }
 
   componentDidMount() {
@@ -379,10 +376,11 @@ class NavbarUser extends React.PureComponent {
               />
             </span>
           </DropdownToggle>
-          <UserDropdown {...this.props} />
+          <UserDropdown {...this.props} logout={() => this.logout()} />
         </UncontrolledDropdown>
       </ul>
     )
   }
 }
-export default NavbarUser
+
+export default connect(null, { LogoutAction })(NavbarUser);
