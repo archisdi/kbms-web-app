@@ -50,7 +50,7 @@ class Login extends React.Component {
                             <Checkbox color="primary" icon={<Check className="vx-icon" size={16} />} label="Remember me" />
                           </FormGroup>
                           <div className="d-flex justify-content-between">
-                            <Button.Ripple color="primary" type="submit" onClick={() => this.login()}>
+                            <Button.Ripple block={true} color="danger" type="submit" onClick={() => this.login()}>
                                 Login 
                             </Button.Ripple>
                           </div>
