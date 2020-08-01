@@ -1,9 +1,9 @@
 import React from "react"
-import { Check, Lock, Mail } from "react-feather"
+import { Lock, Mail } from "react-feather"
 import { connect } from "react-redux"
 import { Button, Card, CardBody, Form, FormGroup, Input, Label, Row } from "reactstrap"
 import "../../assets/scss/pages/authentication.scss"
-import Checkbox from "../../components/@vuexy/checkbox/CheckboxesVuexy"
+// import Checkbox from "../../components/@vuexy/checkbox/CheckboxesVuexy"
 import { history } from "../../history"
 import axios from '../../http'
 import { LoginAction } from '../../redux/actions/auth'
@@ -46,11 +46,11 @@ class Login extends React.Component {
                             </div>
                             <Label>Password</Label>
                           </FormGroup>
-                          <FormGroup className="d-flex justify-content-between align-items-center">
+                          {/* <FormGroup className="d-flex justify-content-between align-items-center">
                             <Checkbox color="primary" icon={<Check className="vx-icon" size={16} />} label="Remember me" />
-                          </FormGroup>
-                          <div className="d-flex justify-content-between">
-                            <Button.Ripple block={true} color="danger" type="submit" onClick={() => this.login()}>
+                          </FormGroup> */}
+                          <div className="d-flex justify-content-between w-full">
+                            <Button.Ripple type="relief" color="danger" onClick={() => this.login()}>
                                 Login 
                             </Button.Ripple>
                           </div>
