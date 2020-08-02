@@ -1,7 +1,10 @@
 import React from "react";
-import { ChevronLeft, ChevronRight } from "react-feather";
-import { Badge, Card, CardBody, Col, Container, Pagination, PaginationItem, PaginationLink, Row, Table } from "reactstrap";
+import { ChevronLeft, ChevronRight, Search } from "react-feather";
+import { Badge, Card, CardBody, Col, Container, Pagination, PaginationItem, PaginationLink, Row, Table, Input, FormGroup } from "reactstrap";
 import http from '../../http';
+import debounce from 'debounce-promise';
+
+const getMemberData = debounce((page, perPage, search) => http.get('/member', { params: { per_page: perPage, page, name: search }}), 400)
 
 class Member extends React.Component{
   state = {
@@ -11,16 +14,14 @@ class Member extends React.Component{
       per_page: 7,
       total_data: 0,
       total_page: 0
-    }
+    },
+    search: ""
   }
 
   async loadData(page = 1, perPage = 7) {
-    await http.get('/member', { params: { per_page: perPage, page }})
+    await getMemberData(page, perPage, this.state.search)
     .then(res => {
-      this.setState({
-        members: res.data.content,
-        pagination: res.data.pagination
-      })
+      this.setState({ members: res.data.content, pagination: res.data.pagination })
     })
   }
 
@@ -36,6 +37,11 @@ class Member extends React.Component{
     }
   }
 
+  async handleSearchOnchange(search) {
+    await this.setState({ search });
+    await this.loadData(this.state.pagination.page);
+  }
+
   async componentWillMount() {
     await this.loadData();
   }
@@ -48,6 +54,7 @@ class Member extends React.Component{
         <td>{ i.name }</td>
         <td>{ i.nim }</td>
         <td>{ i.class_of }</td>
+        <td>{ i.major_name }</td>
         <td>
           { i.is_alumni ? 
           <Badge color="success" >Alumni</Badge> : 
@@ -65,6 +72,7 @@ class Member extends React.Component{
               <th>Name</th>
               <th>Nim</th>
               <th>Class Of</th>
+              <th>Major</th>
               <th>Status</th>
             </tr>
           </thead>
@@ -88,7 +96,7 @@ class Member extends React.Component{
     const isEndOffset = endIndex > totalPage;
     let end = isEndOffset ? totalPage : endIndex;
 
-    if (isStartOffset) {
+    if (!isEndOffset && isStartOffset) {
       end = end + (margin - (page - start));
     }
 
@@ -118,14 +126,24 @@ class Member extends React.Component{
           </PaginationLink>
         </PaginationItem>
     </Pagination>
-  )
+    )
+
+    const searchbar = (
+      <FormGroup className="position-relative has-icon-left">
+      <Input type="text" value={this.state.search} placeholder="Search Member" onChange={(e) => this.handleSearchOnchange(e.target.value)} />
+      <div className="form-control-position">
+        <Search size={15} />
+      </div>
+    </FormGroup>
+    )
 
     return (
       <Container>
         <Row>
-          <Col md="8">
+          <Col>
             <Card>
                 <CardBody>
+                  { searchbar }
                   { table }
                   { pagination }
                 </CardBody>
