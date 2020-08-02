@@ -4,7 +4,8 @@ import { Badge, Card, CardBody, Col, Container, Pagination, PaginationItem, Pagi
 import http from '../../http';
 import debounce from 'debounce-promise';
 
-const getMemberData = debounce((page, perPage, search) => http.get('/member', { params: { per_page: perPage, page, name: search }}), 400)
+const getMemberData = (page, perPage, search) => http.get('/member', { params: { per_page: perPage, page, name: search }});
+const getMemberDataDebounced = debounce(getMemberData, 400)
 
 class Member extends React.Component{
   state = {
@@ -18,11 +19,12 @@ class Member extends React.Component{
     search: ""
   }
 
-  async loadData(page = 1, perPage = 7) {
-    await getMemberData(page, perPage, this.state.search)
-    .then(res => {
-      this.setState({ members: res.data.content, pagination: res.data.pagination })
-    })
+  async loadData(page = 1, perPage = 7, debounced = false) {
+    const retrieve = debounced ? getMemberDataDebounced : getMemberData;
+    await retrieve(page, perPage, this.state.search)
+      .then(res => {
+        this.setState({ members: res.data.content, pagination: res.data.pagination })
+      })
   }
 
   async next() {
@@ -39,7 +41,7 @@ class Member extends React.Component{
 
   async handleSearchOnchange(search) {
     await this.setState({ search });
-    await this.loadData(this.state.pagination.page);
+    await this.loadData(this.state.pagination.page, this.state.pagination.per_page, true);
   }
 
   async componentWillMount() {
@@ -82,7 +84,6 @@ class Member extends React.Component{
         </Table>
     )
 
-    // const leftPaginationStart = this.state.pagination.page > 4 ? 
     const paginationItems = [];
     const margin = 3;
     const page = this.state.pagination.page;
@@ -96,12 +97,13 @@ class Member extends React.Component{
     const isEndOffset = endIndex > totalPage;
     let end = isEndOffset ? totalPage : endIndex;
 
-    if (!isEndOffset && isStartOffset) {
-      end = end + (margin - (page - start));
+    if (isStartOffset && !isEndOffset) {
+      const newEnd = end + (margin - (page - start));
+      end = newEnd > totalPage ? totalPage : newEnd;
     }
 
-    if (!isStartOffset && isEndOffset) {
-      start = start - (margin - (totalPage - page));
+    if (isEndOffset && !isStartOffset) {
+      start = start - (margin - (totalPage - page)) || 1;
     }
 
     for (let i = start; i <= end; i++) {
@@ -145,7 +147,7 @@ class Member extends React.Component{
                 <CardBody>
                   { searchbar }
                   { table }
-                  { pagination }
+                  { this.state.pagination.total_page >= 1 ? pagination : null }
                 </CardBody>
             </Card>
           </Col>
