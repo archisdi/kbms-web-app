@@ -1,19 +1,21 @@
 
 const defaultState = { 
   token: "",
-  refresh_token: ""
+  refresh_token: "",
+  name: "",
+  role: "",
+  expires_at: ""
 }
 
 export default (state = defaultState, action) => {
   switch (action.type) {
 
     case "LOGIN": {
-      const { token, refresh_token } = action.payload;
-      return { ...state, token, refresh_token }
+      return { ...state, ...action.payload }
     }
 
     case "LOGOUT": {
-      return { ...state, token: "", refresh_token: "" }
+      return defaultState
     }
   
     default: {

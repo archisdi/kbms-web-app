@@ -1,10 +1,8 @@
+import classnames from "classnames"
 import React from "react"
 import { Navbar } from "reactstrap"
-import classnames from "classnames"
-import NavbarBookmarks from "./NavbarBookmarks"
+import Logo from '../../../assets/img/logo/logo.png'
 import NavbarUser from "./NavbarUser"
-import userImg from "../../../assets/img/portrait/small/avatar-s-11.jpg"
-
 
 const ThemeNavbar = props => {
   const colorsArr = [ "primary", "danger", "success", "info", "warning", "dark"]
@@ -48,23 +46,16 @@ const ThemeNavbar = props => {
               className="navbar-collapse d-flex justify-content-between align-items-center"
               id="navbar-mobile"
             >
-              <div className="bookmark-wrapper">
-                <NavbarBookmarks
-                  sidebarVisibility={props.sidebarVisibility}
-                  handleAppOverlay={props.handleAppOverlay}
-                />
-              </div>
+              <div className="bookmark-wrapper"></div>
               {props.horizontal ? (
                 <div className="logo d-flex align-items-center">
-                  <div className="brand-logo mr-50"></div>
-                  <h2 className="text-primary brand-text mb-0">Vuexy</h2>
+                  <img src={Logo} alt="Logo" className="mr-50" width="35px"></img>
+                  <h2 className="text-primary brand-text mb-0">KBMS Database</h2>
                 </div>
               ) : null}
               <NavbarUser
                 handleAppOverlay={props.handleAppOverlay}
                 changeCurrentLang={props.changeCurrentLang}
-                userName="John Doe"
-                userImg={ userImg }
               />
             </div>
           </div>
