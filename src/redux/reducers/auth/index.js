@@ -15,7 +15,13 @@ export default (state = defaultState, action) => {
     }
 
     case "LOGOUT": {
-      return defaultState
+      return { 
+        token: "",
+        refresh_token: "",
+        name: "",
+        role: "",
+        expires_at: ""
+      }
     }
   
     default: {

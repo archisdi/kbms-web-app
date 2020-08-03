@@ -14,12 +14,15 @@ axios.interceptors.request.use(request => {
     return Promise.reject(error);
 });
 
-axios.interceptors.response.use(response => {
-    console.log(response);
-    // Edit request config
-    return response;
-}, error => {
-    console.log(error);
+axios.interceptors.response.use(
+    response => response, 
+    error => {
+    const status  = error.response.status;
+
+    if (status === 401) {
+        store.dispatch({ type: "LOGOUT" })
+    }
+
     return Promise.reject(error);
 });
 

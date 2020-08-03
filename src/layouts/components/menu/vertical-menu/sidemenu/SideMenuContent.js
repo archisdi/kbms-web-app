@@ -1,11 +1,11 @@
-import React from "react"
-import { Link } from "react-router-dom"
 import classnames from "classnames"
+import React from "react"
+import { ChevronRight } from "react-feather"
+import { Link } from "react-router-dom"
+import { Badge } from "reactstrap"
 import navigationConfig from "../../../../../configs/navigationConfig"
 import SideMenuGroup from "./SideMenuGroup"
-import { Badge } from "reactstrap"
-import { ChevronRight } from "react-feather"
-import { history } from "../../../../../history"
+// import { history } from "../../../../../history"
 
 class SideMenuContent extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ class SideMenuContent extends React.Component {
     this.parentArr = []
     this.collapsedPath = null
     this.redirectUnauthorized = () => {
-      history.push("/misc/not-authorized")
+      // history.push("/misc/not-authorized")
     }
   }
   state = {
