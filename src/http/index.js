@@ -1,21 +1,24 @@
 import * as axios from 'axios';
-import { store } from '../redux/storeConfig/store'
+import { store } from '../redux/storeConfig/store';
 
 axios.defaults.baseURL = 'http://localhost:3002';
-axios.defaults.headers.common['Authorization'] = `Bearer ${store.getState().auth.token}`;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
-axios.interceptors.request.use(request => {
-    // console.log(request);
-    // Edit request config
-    return request;
+axios.interceptors.request.use(config => {
+    const JWT_TOKEN = store.getState().auth.token;
+
+    if (JWT_TOKEN)
+        config.headers.Authorization = `Bearer ${JWT_TOKEN}`;
+
+    return config;
 }, error => {
-    // console.log(error);
     return Promise.reject(error);
 });
 
 axios.interceptors.response.use(
-    response => response, 
+    response => {
+        return response;
+    }, 
     error => {
     const status  = error.response.status;
 

@@ -41,7 +41,7 @@ class Member extends React.Component{
 
   async handleSearchOnchange(search) {
     await this.setState({ search });
-    await this.loadData(this.state.pagination.page, this.state.pagination.per_page, true);
+    await this.loadData(1, this.state.pagination.per_page, true);
   }
 
   async componentWillMount() {
@@ -147,7 +147,7 @@ class Member extends React.Component{
                 <CardBody>
                   { searchbar }
                   { table }
-                  { this.state.pagination.total_page >= 1 ? pagination : null }
+                  { this.state.members.length !== 0 ? pagination : null }
                 </CardBody>
             </Card>
           </Col>

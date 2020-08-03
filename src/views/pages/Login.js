@@ -21,7 +21,7 @@ class Login extends React.Component {
         history.push("/");
       })
       .catch(() => {
-        
+        // alert
       })
   }
 
@@ -49,8 +49,8 @@ class Login extends React.Component {
                           {/* <FormGroup className="d-flex justify-content-between align-items-center">
                             <Checkbox color="primary" icon={<Check className="vx-icon" size={16} />} label="Remember me" />
                           </FormGroup> */}
-                          <div className="d-flex justify-content-between w-full">
-                            <Button.Ripple type="relief" color="danger" onClick={() => this.login()}>
+                          <div className="d-flex justify-content-center">
+                            <Button.Ripple type="relief" color="danger" onClick={() => this.login()} block={true}>
                                 Login 
                             </Button.Ripple>
                           </div>
