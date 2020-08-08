@@ -14,10 +14,10 @@ import {
   Spinner,
 } from "reactstrap";
 import "../../assets/scss/pages/authentication.scss";
-// import Checkbox from "../../components/@vuexy/checkbox/CheckboxesVuexy"
 import { history } from "../../history";
 import axios from "../../http";
 import { LoginAction } from "../../redux/actions/auth";
+import { ToastContainer, toast } from "react-toastify";
 
 class Login extends React.Component {
   state = {
@@ -40,7 +40,11 @@ class Login extends React.Component {
       })
       .catch(() => {
         this.toggleLoading();
-        // alert
+        toast.error("Invalid Credential", {
+          position: toast.POSITION.BOTTOM_CENTER,
+          hideProgressBar: true,
+          toastId: "login",
+        });
       });
   }
 
@@ -86,9 +90,6 @@ class Login extends React.Component {
                   </div>
                   <Label>Password</Label>
                 </FormGroup>
-                {/* <FormGroup className="d-flex justify-content-between align-items-center">
-                            <Checkbox color="primary" icon={<Check className="vx-icon" size={16} />} label="Remember me" />
-                          </FormGroup> */}
                 <Button.Ripple
                   className="btn-block"
                   type="relief"
@@ -105,6 +106,7 @@ class Login extends React.Component {
               </Col>
             </Form>
           </CardBody>
+          <ToastContainer />
         </Card>
       </Row>
     );
