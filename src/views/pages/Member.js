@@ -100,7 +100,8 @@ class Member extends React.Component {
     const spinner = (
       <div className="text-center">
         <br />
-        <Spinner color="danger" size="lg" />
+        <Spinner color="danger" size="xl" />
+        <br />
       </div>
     );
 
@@ -115,7 +116,7 @@ class Member extends React.Component {
             <th>Status</th>
           </tr>
         </thead>
-        {this.state.is_loading ? spinner : <tbody>{member}</tbody>}
+        <tbody>{member}</tbody>
       </Table>
     );
 
@@ -205,7 +206,7 @@ class Member extends React.Component {
             <Card>
               <CardBody>
                 {searchbar}
-                {table}
+                {this.state.is_loading ? spinner : table}
                 {this.state.members.length !== 0 ? pagination : null}
               </CardBody>
             </Card>

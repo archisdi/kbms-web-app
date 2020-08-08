@@ -10,7 +10,9 @@ const Home = lazy(() => import("./views/pages/Home"));
 
 const Member = lazy(() => import("./views/pages/Member"));
 
-const login = lazy(() => import("./views/pages/Login"));
+const Login = lazy(() => import("./views/pages/Login"));
+
+const Calendar = lazy(() => import("./views/pages/Calendar"));
 
 // Set Layout and Component Using App Route
 const RouteConfig = ({
@@ -64,6 +66,7 @@ class AppRouter extends React.Component {
           <Switch>
             <AppRoute exact path="/" component={Home} />
             <AppRoute path="/members" component={Member} />
+            <AppRoute path="/calendar" component={Calendar} />
             <Redirect to="/" />
           </Switch>
         </Router>
@@ -72,7 +75,7 @@ class AppRouter extends React.Component {
       routes = (
         <Router history={history}>
           <Switch>
-            <AppRoute path="/login" component={login} fullLayout />
+            <AppRoute path="/login" component={Login} fullLayout />
             <Redirect to="/login" />
           </Switch>
         </Router>
